@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Бій Покемонів</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f5f5f5;
+    }
+    .pokemon {
+      display: inline-block;
+      width: 200px;
+      margin: 20px;
+      padding: 10px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .progress {
+      width: 100%;
+      height: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .bar {
+      height: 100%;
+      width: 100%;
+      background: green;
+      transition: width 0.3s, background 0.3s;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Гра "Бій Покемонів"</h1>
+
+  <div class="pokemon" id="hero1">
+    <h3>Покемон 1</h3>
+    <p>Життя: <span id="hp1">100</span></p>
+    <div class="progress"><div class="bar" id="bar1"></div></div>
+  </div>
+
+  <div class="pokemon" id="hero2">
+    <h3>Покемон 2</h3>
+    <p>Життя: <span id="hp2">100</span></p>
+    <div class="progress"><div class="bar" id="bar2"></div></div>
+  </div>
+
+  <div>
+    <button onclick="attack('normal')">Удар 1 (звичайний)</button>
+    <button onclick="attack('strong')">Удар 2 (сильний)</button>
+  </div>
+
+  <script>
+    // --- створюємо об'єкти для суперників ---
+    const pokemon1 = { name: "Покемон 1", hp: 100 };
+    const pokemon2 = { name: "Покемон 2", hp: 100 };
+
+    // --- функція для оновлення стану ---
+    function updateBars() {
+      document.getElementById("hp1").textContent = pokemon1.hp;
+      document.getElementById("hp2").textContent = pokemon2.hp;
+
+      const bar1 = document.getElementById("bar1");
+      const bar2 = document.getElementById("bar2");
+      bar1.style.width = pokemon1.hp + "%";
+      bar2.style.width = pokemon2.hp + "%";
+
+      // зміна кольору в залежності від здоров'я
+      bar1.style.background = pokemon1.hp > 50 ? "green" : pokemon1.hp > 20 ? "orange" : "red";
+      bar2.style.background = pokemon2.hp > 50 ? "green" : pokemon2.hp > 20 ? "orange" : "red";
+    }
+
+    // --- функція для нанесення удару ---
+    function attack(type) {
+      if (pokemon1.hp <= 0 || pokemon2.hp <= 0) {
+        alert("Гра завершена! Почніть спочатку.");
+        return;
+      }
+
+      // випадковий урон
+      let damage1, damage2;
+      if (type === 'normal') {
+        damage1 = Math.floor(Math.random() * 10) + 5;  // 5–15
+        damage2 = Math.floor(Math.random() * 10) + 5;
+      } else if (type === 'strong') {
+        damage1 = Math.floor(Math.random() * 20) + 10; // 10–30
+        damage2 = Math.floor(Math.random() * 20) + 10;
+      }
+
+      // зменшуємо життя
+      pokemon1.hp = Math.max(0, pokemon1.hp - damage2);
+      pokemon2.hp = Math.max(0, pokemon2.hp - damage1);
+
+      updateBars();
+
+      // перевірка на перемогу
+      if (pokemon1.hp === 0 && pokemon2.hp === 0) {
+        alert("Нічия!");
+      } else if (pokemon1.hp === 0) {
+        alert(pokemon2.name + " переміг!");
+      } else if (pokemon2.hp === 0) {
+        alert(pokemon1.name + " переміг!");
+      }
+    }
+
+    // початкове оновлення
+    updateBars();
+  </script>
+</body>
+</html>
