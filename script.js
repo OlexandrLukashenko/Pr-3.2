@@ -1,35 +1,38 @@
+// --- функція атаки (винесена з об'єкта) ---
+function attackAction(type, enemy) {
+  if (this.hp <= 0 || enemy.hp <= 0) {
+    alert("Гра завершена! Почніть спочатку.");
+    return;
+  }
+
+  // випадковий урон
+  const damage =
+    type === "normal"
+      ? Math.floor(Math.random() * 10) + 5   // 5–15
+      : Math.floor(Math.random() * 20) + 10; // 10–30
+
+  enemy.hp = Math.max(0, enemy.hp - damage);
+  updateBars();
+
+  addLog(`${this.name} атакує ${enemy.name} на ${damage} урону. У ${enemy.name} залишилось ${enemy.hp} HP.`);
+
+  // перевірка на перемогу
+  if (this.hp === 0 && enemy.hp === 0) {
+    addLog("Нічия!");
+  } else if (this.hp === 0) {
+    addLog(`${enemy.name} переміг!`);
+  } else if (enemy.hp === 0) {
+    addLog(`${this.name} переміг!`);
+  }
+}
+
 // --- створюємо об'єкти для суперників ---
 const createPokemon = (name, hp, barId, hpId) => ({
   name,
   hp,
   barId,
   hpId,
-  attack(type, enemy) {
-    if (this.hp <= 0 || enemy.hp <= 0) {
-      alert("Гра завершена! Почніть спочатку.");
-      return;
-    }
-
-    // випадковий урон
-    const damage =
-      type === "normal"
-        ? Math.floor(Math.random() * 10) + 5  // 5–15
-        : Math.floor(Math.random() * 20) + 10; // 10–30
-
-    enemy.hp = Math.max(0, enemy.hp - damage);
-    updateBars();
-
-    addLog(`${this.name} атакує ${enemy.name} на ${damage} урону. У ${enemy.name} залишилось ${enemy.hp} HP.`);
-
-    // перевірка на перемогу
-    if (this.hp === 0 && enemy.hp === 0) {
-      addLog("Нічия!");
-    } else if (this.hp === 0) {
-      addLog(`${enemy.name} переміг!`);
-    } else if (enemy.hp === 0) {
-      addLog(`${this.name} переміг!`);
-    }
-  }
+  attack: attackAction // посилання на зовнішню функцію
 });
 
 const pokemon1 = createPokemon("Покемон 1", 100, "bar1", "hp1");
@@ -57,7 +60,7 @@ function updateBars() {
 const logs = [];
 
 function addLog(message) {
-  logs.unshift(message); // додаємо зверху
+  logs.unshift(message);
   const logsDiv = document.getElementById("logs");
   logsDiv.innerHTML = logs.map(log => `<p>${log}</p>`).join("");
 }
